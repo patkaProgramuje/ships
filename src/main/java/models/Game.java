@@ -2,6 +2,7 @@ package models;
 
 import enums.Sign;
 import utils.Settings;
+import utils.ValidateInput;
 
 import java.util.List;
 import java.util.Scanner;
@@ -9,28 +10,37 @@ import java.util.Scanner;
 public class Game {
 
     private List<User> users;
+    private List<Board> boards;
 
     private Game() {
     }
 
-    public static void play() {
-        //TODO: add exception handle during get data from users (tego jeszcze nie mam)
+    public static void startGame() {
         Game game = new Game();
         game.init();
+        game.play(game);
+        game.showWinner(game);
+    }
 
+    private void play(Game game) {
         while (game.isWinner(game.getOpponentBoard())) {
-            System.out.printf("%s has movement. Enter number.", game.getActiveUser());
-            String number = new Scanner(System.in).next();
+            String number = game.getFieldNumberFromUser(game);
             if (!game.getOpponentBoard().checkIfNumberIsShip(Integer.parseInt(number))) {
                 game.changeActiveUser();
             }
         }
-        game.showWinner(game);
+    }
+
+    private String getFieldNumberFromUser(Game game) {
+        System.out.printf("%s has movement. Enter number.", game.getActiveUser());
+        String number = new Scanner(System.in).next();
+        ValidateInput.validateInputForChosenField(number, boards);
+        return number;
     }
 
     private void init() {
         Settings settings = new Settings();
-        List<Board> boards = settings.getBoards();
+        this.boards = settings.getBoards();
         this.users = settings.getUsers(boards);
         settings.fillBoards(users);
     }

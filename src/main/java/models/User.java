@@ -3,6 +3,7 @@ package models;
 public class User {
     private String nick;
     private Board board;
+
     private boolean isActive;
 
     public User(String nick) {

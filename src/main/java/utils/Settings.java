@@ -31,10 +31,9 @@ public class Settings {
 
     public List<Board> getBoards(){
         System.out.println("Enter boards size: ");
-        String boardSize = new Scanner(System.in).next();
-        int size = Integer.parseInt(boardSize);
-        //try{}catch{}
-        Board board = Board.createBoard(size);
+        String size = new Scanner(System.in).next();
+        ValidateInput.validateInputBoardSize(size);
+        Board board = Board.createBoard(Integer.parseInt(size));
         List<Board> boards = Arrays.asList(board, board);
         System.out.println("Two board was created.");
         return boards;
@@ -46,9 +45,10 @@ public class Settings {
         for (User user : users) {
             System.out.printf("User %s settings:", user.getNick());
             for (int i : shipsSize) {
-                System.out.printf("Enter numbers for %d - most ship, divided commas.", i);
+                System.out.printf("Enter numbers for %s - most ship, divided commas.", i);
                 String scanner = new Scanner(System.in).next();
                 String[] fields = scanner.split(",");
+                ValidateInput.validateInputForShipFields(fields);
                 Ship ship = new Ship(i, fields);
                 user.getBoard().fillBoardWithShip(ship);
             }
