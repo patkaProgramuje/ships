@@ -10,7 +10,6 @@ import java.util.Scanner;
 public class Game {
 
     private List<User> users;
-    private List<Board> boards;
 
     public void startGame() {
         init();
@@ -19,23 +18,41 @@ public class Game {
     }
 
     private void play() {
-        while (!isWinner(getActiveUser().getOpponentBoard())) {
+        while (!isWinner(getOpponentBoard())) {
             String number = getFieldNumberFromUser();
-            if (!getActiveUser().getOpponentBoard().checkIfNumberIsShip(Integer.parseInt(number))) {
+            if (!getOpponentBoard().checkIfNumberIsShip(Integer.parseInt(number))) {
                 changeActiveUser();
             }
         }
     }
 
+    private Board getOpponentBoard() {
+        Board board = null;
+        for (User user : users) {
+            if (!user.isActive()) {
+                board = user.getBoard();
+            }
+        }
+        return board;
+    }
+
     private void init() {
         Settings settings = new Settings();
-        this.boards = settings.getBoards();
-        this.users = settings.getUsers(boards);
-        settings.fillBoards(users, boards);
+        settings.init();
+        this.users = settings.getUsers();
     }
 
     private void showWinner() {
         System.out.printf("The winner is %s.", getActiveUser().getNick());
+    }
+
+    private boolean isWinner(Board board) {
+        List<Field> fields = board.getFields();
+        for (Field field : fields) {
+            if (field.getSign().equals(Sign.CROSS))
+                return false;
+        }
+        return true;
     }
 
     private User getActiveUser() {
@@ -56,19 +73,10 @@ public class Game {
         }
     }
 
-    private boolean isWinner(Board board) {
-        List<Field> fields = board.getFields();
-        for (Field field : fields) {
-            if (field.getSign().equals(Sign.CROSS))
-                return false;
-        }
-        return true;
-    }
-
     private String getFieldNumberFromUser() {
-        System.out.printf("%s has movement. Enter number.", getActiveUser());
+        System.out.printf("%s has movement. Enter number.", getActiveUser().getNick());
         String number = new Scanner(System.in).next();
-        ValidateInput.validateInputForChosenField(number, boards);
+        ValidateInput.validateInputForChosenField(number, getOpponentBoard());
         return number;
     }
 }

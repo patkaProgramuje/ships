@@ -3,7 +3,6 @@ package models;
 public class User {
     private String nick;
     private Board board;
-    private Board opponentBoard;
     private boolean isActive;
 
     public User(String nick) {
@@ -30,11 +29,4 @@ public class User {
         isActive = active;
     }
 
-    public Board getOpponentBoard() {
-        return opponentBoard;
-    }
-
-    public void setOpponentBoard(Board opponentBoard) {
-        this.opponentBoard = opponentBoard;
-    }
 }

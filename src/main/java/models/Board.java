@@ -4,7 +4,6 @@ import enums.Sign;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Board {
@@ -26,10 +25,13 @@ public class Board {
         return fields;
     }
 
-    public void fillBoardWithShip(Ship ship) {
+    public boolean tryPlaceShip(Ship ship) {
         String[] numbers = ship.getNumbers();
         if (checkAvailabilityFields(numbers) && checkIfNumbersAreNeighbours(numbers)) {
             setSignToField(numbers);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -54,6 +56,7 @@ public class Board {
         for (String str : numbers) {
             int number = Integer.valueOf(str);
             if (fields.get(number).isChecked()) {
+                System.out.println("This place is already busy.");
                 return false;
             }
         }
@@ -61,19 +64,25 @@ public class Board {
     }
 
     private boolean checkIfNumbersAreNeighbours(String[] numbers) {
-        List<String> strings = Arrays.asList(numbers);
         for (String str : numbers) {
             int number = Integer.valueOf(str);
             List<String> neighbours = fields.get(number).getNeighbours(number, size);
-            if (Collections.indexOfSubList(neighbours, strings) == -1) {
+            if (!hasAtLeastOneNeighbour(numbers, neighbours) && numbers.length > 1) {
+                System.out.println("Entered wrong fields.");
                 return false;
             }
         }
         return true;
     }
 
+    private boolean hasAtLeastOneNeighbour(String[] number, List<String> neighbours) {
+        List<String> numbers = Arrays.asList(number);
+        return neighbours.stream()
+                .anyMatch(numbers::contains);
+    }
+
     private void initializeBoard() {
-        for (int i = 0; i < size * 2; i++) {
+        for (int i = 0; i < size * size; i++) {
             Field field = new Field();
             field.setNumber(i);
             fields.add(field);
@@ -83,12 +92,12 @@ public class Board {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < fields.size() * 2; i++) {
-            if (i == size) {
+        for (int i = 0; i < fields.size(); i++) {
+            if (i % size == 0) {
                 stringBuilder.append("\n");
             }
             if (fields.get(i).getSign().equals(Sign.EMPTY)) {
-                if (i < 10) {
+                if (i < fields.size()) {
                     stringBuilder.append("  ").append(fields.get(i).getNumber()).append(" ");
                 } else {
                     stringBuilder.append(" ").append(fields.get(i).getNumber()).append(" ");
@@ -98,6 +107,10 @@ public class Board {
             }
         }
         return stringBuilder.toString();
+    }
+
+    public int getSize() {
+        return size;
     }
 }
 

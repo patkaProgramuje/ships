@@ -1,11 +1,9 @@
 package models;
 
 public class Ship {
-    private int size;
     private String[] numbers;
 
-    public Ship(int size, String[] numbers) {
-        this.size = size;
+    public Ship(String[] numbers) {
         this.numbers = numbers;
     }
 

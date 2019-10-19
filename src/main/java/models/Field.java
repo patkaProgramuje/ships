@@ -55,7 +55,7 @@ class Field {
     }
 
     private void getDownNeighbour(int number, int boardSize, List<String> neighbours) {
-        if ((number + boardSize) < boardSize * 2) {
+        if ((number + boardSize) < boardSize * boardSize) {
             neighbours.add(String.valueOf(number + boardSize));
         }
     }
@@ -67,7 +67,7 @@ class Field {
     }
 
     private void getLeftNeighbour(int number, List<String> neighbours) {
-        if ((number - 1) < 0) {
+        if ((number - 1) >= 0) {
             neighbours.add(String.valueOf(number - 1));
         }
     }

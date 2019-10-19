@@ -4,60 +4,76 @@ import models.Board;
 import models.Ship;
 import models.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Settings {
 
-    public List<User> getUsers(List<Board> boards) {
-        List<User> users = new ArrayList<>();
-        System.out.println("Enter name first user: ");
-        String firstUser = new Scanner(System.in).next();
-        User userOne = new User(firstUser);
-        userOne.setActive(true);
-        userOne.setBoard(boards.get(0));
-        userOne.setOpponentBoard(boards.get(1));
-        users.add(userOne);
+    private List<User> users = new ArrayList<>();
 
-        System.out.println("Enter name second user: ");
-        String secondUSer = new Scanner(System.in).next();
-        User userTwo = new User(secondUSer);
-        userTwo.setActive(false);
-        userTwo.setBoard(boards.get(1));
-        userTwo.setOpponentBoard(boards.get(0));
-        users.add(userTwo);
+    public List<User> getUsers() {
         return users;
     }
 
-    public List<Board> getBoards() {
+    public void init(){
+        List<Board> boards = initBoards();
+        initUsers(boards);
+        placeShips();
+    }
+
+    private void placeShips() {
+        int[] shipsSize = {5, 4, 3, 3, 2, 2, 1, 1};
+
+        for (User user : users) {
+            System.out.printf("User %s settings: ", user.getNick());
+            System.out.println();
+            Board board = user.getBoard();
+            System.out.println(board);
+            for (int i : shipsSize) {
+                System.out.printf("Enter numbers for %s - most ship, divided commas.", i);
+                Scanner scanner = new Scanner(System.in);
+                String numbers = scanner.nextLine();
+                String[] fields = numbers.split(",");
+                ValidateInput.validateInputForShipFields(fields);
+                Ship ship = new Ship(fields);
+                while (!board.tryPlaceShip(ship)) {
+                    numbers = scanner.nextLine();
+                    fields = numbers.split(",");
+                    ValidateInput.validateInputForShipFields(fields);
+                    ship = new Ship(fields);
+                }
+            }
+            System.out.println(board);
+        }
+    }
+
+    private User getUser(List<Board> boards, String s, boolean b, int i) {
+        System.out.println(s);
+        String firstUser = new Scanner(System.in).next();
+        User userOne = new User(firstUser);
+        userOne.setActive(b);
+        userOne.setBoard(boards.get(i));
+        return userOne;
+    }
+
+    private List<Board> initBoards() {
         System.out.println("Enter boards size: ");
         Scanner scanner = new Scanner(System.in);
         String size = scanner.next();
         while (!ValidateInput.validateInputBoardSize(size)) {
             size = scanner.next();
         }
-        Board board = Board.createBoard(Integer.parseInt(size));
-        List<Board> boards = Arrays.asList(board, board);
+        Board boardOne = Board.createBoard(Integer.parseInt(size));
+        Board boardTwo = Board.createBoard(Integer.parseInt(size));
+        List<Board> boards = Arrays.asList(boardOne, boardTwo);
         System.out.println("Two board was created.");
         return boards;
     }
 
-    public void fillBoards(List<User> users, List<Board> boards) {
-        int[] shipsSize = {5, 4, 3, 3, 2, 2, 1, 1};
+    private void initUsers(List<Board> boards){
+        User userOne = getUser(boards, "Enter name first user: ", true, 0);
+        users.add(userOne);
 
-        for (User user : users) {
-            System.out.printf("User %s settings: ", user.getNick());
-            System.out.println(boards);
-            for (int i : shipsSize) {
-                System.out.printf("Enter numbers for %s - most ship, divided commas.", i);
-                String scanner = new Scanner(System.in).nextLine();
-                String[] fields = scanner.split(",");
-                ValidateInput.validateInputForShipFields(fields);
-                Ship ship = new Ship(i, fields);
-                user.getBoard().fillBoardWithShip(ship);
-            }
-        }
+        User userTwo = getUser(boards, "Enter name second user: ", false, 1);
+        users.add(userTwo);
     }
 }

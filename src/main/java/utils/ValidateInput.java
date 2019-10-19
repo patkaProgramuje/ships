@@ -2,18 +2,21 @@ package utils;
 
 import models.Board;
 
-import java.util.List;
-
 public class ValidateInput {
 
-    public static void validateInputForChosenField(String number, List<Board> boards) {
+    private static final String ENTERED_WRONG_DATA_FORMAT = "Entered wrong data format.";
+    private static final String ENTERED_TOO_BIG_NUMBER = "Entered too big number.";
+    private static final String ENTERED_SIZE_IS_TOO_SMALL_ENTERED_VALUE_MUST_BE_GREATER_OR_EQUAL_TO_10 = "Entered size is too small. Entered value must be greater or equal to 10.";
+
+    public static void validateInputForChosenField(String number, Board board) {
         try {
             int fieldNumber = Integer.parseInt(number);
-            if (fieldNumber > boards.size() * 2) {
-                System.out.println("Entered wrong number.");
+            int size = board.getSize();
+            if (fieldNumber > size * size) {
+                System.out.println(ENTERED_TOO_BIG_NUMBER);
             }
         } catch (NumberFormatException e) {
-            System.out.println("Entered wrong data format.");
+            System.out.println(ENTERED_WRONG_DATA_FORMAT);
         }
     }
 
@@ -21,12 +24,12 @@ public class ValidateInput {
         try {
             int boardSize = Integer.parseInt(size);
             if (boardSize < 10) {
-                System.out.println("Entered size is too small. Enter value minimum 10.");
+                System.out.println(ENTERED_SIZE_IS_TOO_SMALL_ENTERED_VALUE_MUST_BE_GREATER_OR_EQUAL_TO_10);
                 return false;
             }
             return true;
         } catch (NumberFormatException e) {
-            System.out.println("Entered wrong data format.");
+            System.out.println(ENTERED_WRONG_DATA_FORMAT);
             return false;
         }
     }
@@ -37,7 +40,7 @@ public class ValidateInput {
                 Integer.parseInt(s);
             }
         } catch (NumberFormatException e) {
-            System.out.println("Entered wrong data format.");
+            System.out.println(ENTERED_WRONG_DATA_FORMAT);
         }
 
     }
