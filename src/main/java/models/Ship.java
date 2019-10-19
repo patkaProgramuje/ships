@@ -9,19 +9,7 @@ public class Ship {
         this.numbers = numbers;
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public String[] getNumbers() {
+    String[] getNumbers() {
         return numbers;
-    }
-
-    public void setNumbers(String[] numbers) {
-        this.numbers = numbers;
     }
 }

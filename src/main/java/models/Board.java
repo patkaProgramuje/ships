@@ -22,15 +22,7 @@ public class Board {
         return board;
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public List<Field> getFields() {
+    List<Field> getFields() {
         return fields;
     }
 
@@ -41,7 +33,7 @@ public class Board {
         }
     }
 
-    public boolean checkIfNumberIsShip(int number) {
+    boolean checkIfNumberIsShip(int number) {
         if (fields.get(number).isChecked()) {
             fields.get(number).setSign(Sign.FOUND);
             return true;
@@ -54,7 +46,7 @@ public class Board {
         for (String str : numbers) {
             int number = Integer.valueOf(str);
             fields.get(number).setSign(Sign.CROSS);
-            fields.get(number).setChecked(true);
+            fields.get(number).setChecked();
         }
     }
 

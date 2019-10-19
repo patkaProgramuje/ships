@@ -17,17 +17,23 @@ public class ValidateInput {
         }
     }
 
-    static void validateInputBoardSize(String size) {
+    static boolean validateInputBoardSize(String size) {
         try {
-            Integer.parseInt(size);
+            int boardSize = Integer.parseInt(size);
+            if (boardSize < 10) {
+                System.out.println("Entered size is too small. Enter value minimum 10.");
+                return false;
+            }
+            return true;
         } catch (NumberFormatException e) {
             System.out.println("Entered wrong data format.");
+            return false;
         }
     }
 
     static void validateInputForShipFields(String[] fields) {
         try {
-            for(String s: fields) {
+            for (String s : fields) {
                 Integer.parseInt(s);
             }
         } catch (NumberFormatException e) {

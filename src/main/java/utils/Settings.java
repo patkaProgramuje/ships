@@ -11,13 +11,14 @@ import java.util.Scanner;
 
 public class Settings {
 
-    public List<User> getUsers(List<Board> boards){
+    public List<User> getUsers(List<Board> boards) {
         List<User> users = new ArrayList<>();
         System.out.println("Enter name first user: ");
         String firstUser = new Scanner(System.in).next();
         User userOne = new User(firstUser);
         userOne.setActive(true);
         userOne.setBoard(boards.get(0));
+        userOne.setOpponentBoard(boards.get(1));
         users.add(userOne);
 
         System.out.println("Enter name second user: ");
@@ -25,28 +26,33 @@ public class Settings {
         User userTwo = new User(secondUSer);
         userTwo.setActive(false);
         userTwo.setBoard(boards.get(1));
+        userTwo.setOpponentBoard(boards.get(0));
         users.add(userTwo);
         return users;
     }
 
-    public List<Board> getBoards(){
+    public List<Board> getBoards() {
         System.out.println("Enter boards size: ");
-        String size = new Scanner(System.in).next();
-        ValidateInput.validateInputBoardSize(size);
+        Scanner scanner = new Scanner(System.in);
+        String size = scanner.next();
+        while (!ValidateInput.validateInputBoardSize(size)) {
+            size = scanner.next();
+        }
         Board board = Board.createBoard(Integer.parseInt(size));
         List<Board> boards = Arrays.asList(board, board);
         System.out.println("Two board was created.");
         return boards;
     }
 
-    public void fillBoards(List<User> users) {
+    public void fillBoards(List<User> users, List<Board> boards) {
         int[] shipsSize = {5, 4, 3, 3, 2, 2, 1, 1};
 
         for (User user : users) {
-            System.out.printf("User %s settings:", user.getNick());
+            System.out.printf("User %s settings: ", user.getNick());
+            System.out.println(boards);
             for (int i : shipsSize) {
                 System.out.printf("Enter numbers for %s - most ship, divided commas.", i);
-                String scanner = new Scanner(System.in).next();
+                String scanner = new Scanner(System.in).nextLine();
                 String[] fields = scanner.split(",");
                 ValidateInput.validateInputForShipFields(fields);
                 Ship ship = new Ship(i, fields);

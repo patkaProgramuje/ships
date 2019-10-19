@@ -5,41 +5,41 @@ import enums.Sign;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Field {
+class Field {
     private Sign sign;
     private boolean isChecked;
     private int number;
 
-    public Field() {
+    Field() {
         this.sign = Sign.EMPTY;
         this.isChecked = false;
     }
 
-    public Sign getSign() {
+    Sign getSign() {
         return sign;
     }
 
-    public void setSign(Sign sign) {
+    void setSign(Sign sign) {
         this.sign = sign;
     }
 
-    public boolean isChecked() {
+    boolean isChecked() {
         return isChecked;
     }
 
-    public void setChecked(boolean checked) {
-        isChecked = checked;
+    void setChecked() {
+        isChecked = true;
     }
 
-    public int getNumber() {
+    int getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    void setNumber(int number) {
         this.number = number;
     }
 
-    public List<String> getNeighbours(int number, int boardSize) {
+    List<String> getNeighbours(int number, int boardSize) {
         List<String> neighbours = new ArrayList<>();
         getLeftNeighbour(number, neighbours);
         getRightNeighbour(number, boardSize, neighbours);

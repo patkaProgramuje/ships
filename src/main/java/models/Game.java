@@ -12,37 +12,30 @@ public class Game {
     private List<User> users;
     private List<Board> boards;
 
-    private Game() {
+    public void startGame() {
+        init();
+        play();
+        showWinner();
     }
 
-    public static void startGame() {
-        Game game = new Game();
-        game.init();
-        game.play(game);
-        game.showWinner(game);
-    }
-
-    private void play(Game game) {
-        while (game.isWinner(game.getOpponentBoard())) {
-            String number = game.getFieldNumberFromUser(game);
-            if (!game.getOpponentBoard().checkIfNumberIsShip(Integer.parseInt(number))) {
-                game.changeActiveUser();
+    private void play() {
+        while (!isWinner(getActiveUser().getOpponentBoard())) {
+            String number = getFieldNumberFromUser();
+            if (!getActiveUser().getOpponentBoard().checkIfNumberIsShip(Integer.parseInt(number))) {
+                changeActiveUser();
             }
         }
-    }
-
-    private String getFieldNumberFromUser(Game game) {
-        System.out.printf("%s has movement. Enter number.", game.getActiveUser());
-        String number = new Scanner(System.in).next();
-        ValidateInput.validateInputForChosenField(number, boards);
-        return number;
     }
 
     private void init() {
         Settings settings = new Settings();
         this.boards = settings.getBoards();
         this.users = settings.getUsers(boards);
-        settings.fillBoards(users);
+        settings.fillBoards(users, boards);
+    }
+
+    private void showWinner() {
+        System.out.printf("The winner is %s.", getActiveUser().getNick());
     }
 
     private User getActiveUser() {
@@ -51,10 +44,6 @@ public class Game {
             if (user.isActive()) active = user;
         }
         return active;
-    }
-
-    private void showWinner(Game game) {
-        System.out.printf("The winner is %s.", game.getActiveUser().getNick());
     }
 
     private void changeActiveUser() {
@@ -67,14 +56,6 @@ public class Game {
         }
     }
 
-    private Board getOpponentBoard() {
-        Board board = null;
-        for (User user : users) {
-            if (!user.isActive()) board = user.getBoard();
-        }
-        return board;
-    }
-
     private boolean isWinner(Board board) {
         List<Field> fields = board.getFields();
         for (Field field : fields) {
@@ -82,6 +63,13 @@ public class Game {
                 return false;
         }
         return true;
+    }
+
+    private String getFieldNumberFromUser() {
+        System.out.printf("%s has movement. Enter number.", getActiveUser());
+        String number = new Scanner(System.in).next();
+        ValidateInput.validateInputForChosenField(number, boards);
+        return number;
     }
 }
 
