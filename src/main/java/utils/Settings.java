@@ -4,7 +4,10 @@ import models.Board;
 import models.Ship;
 import models.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Settings {
 
@@ -28,6 +31,7 @@ public class Settings {
             System.out.println();
             Board board = user.getBoard();
             System.out.println(board);
+
             for (int i : shipsSize) {
                 System.out.printf("Enter numbers for %s - most ship, divided commas.", i);
                 Scanner scanner = new Scanner(System.in);
@@ -35,6 +39,7 @@ public class Settings {
                 String[] fields = numbers.split(",");
                 ValidateInput.validateInputForShipFields(fields);
                 Ship ship = new Ship(fields);
+
                 while (!board.tryPlaceShip(ship)) {
                     numbers = scanner.nextLine();
                     fields = numbers.split(",");
@@ -46,12 +51,12 @@ public class Settings {
         }
     }
 
-    private User getUser(List<Board> boards, String s, boolean b, int i) {
-        System.out.println(s);
+    private User getUser(List<Board> boards, String message, boolean isActive, int boardNumber) {
+        System.out.println(message);
         String firstUser = new Scanner(System.in).next();
         User userOne = new User(firstUser);
-        userOne.setActive(b);
-        userOne.setBoard(boards.get(i));
+        userOne.setActive(isActive);
+        userOne.setBoard(boards.get(boardNumber));
         return userOne;
     }
 
@@ -59,9 +64,11 @@ public class Settings {
         System.out.println("Enter boards size: ");
         Scanner scanner = new Scanner(System.in);
         String size = scanner.next();
+
         while (!ValidateInput.validateInputBoardSize(size)) {
             size = scanner.next();
         }
+
         Board boardOne = Board.createBoard(Integer.parseInt(size));
         Board boardTwo = Board.createBoard(Integer.parseInt(size));
         List<Board> boards = Arrays.asList(boardOne, boardTwo);
